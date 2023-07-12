@@ -1,3 +1,5 @@
+import ColorPicker from "@/components/ColorPicker";
+
 export default function Home() {
   return (
     <main className="flex justify-center w-screen">
@@ -37,7 +39,7 @@ export default function Home() {
       <div
         id="theme"
         className="ml-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
-      ></div>
+      > <ColorPicker /></div>
     </main>
   );
 }
