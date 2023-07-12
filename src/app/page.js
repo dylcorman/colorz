@@ -1,6 +1,35 @@
+"use client";
+import { useState, useRef } from "react";
+
+import HeaderInfinte from "../components/HeaderInfinite";
 import ColorPicker from "@/components/ColorPicker";
 
 export default function Home() {
+  const [elements, setElements] = useState([]);
+  const [currentElement, setCurrentElement] = useState(null);
+  const headerExists = useRef(false);
+
+  function handleNewHeader(event) {
+    if (!headerExists.current) {
+      event.target.classList.remove("bg-headerNoSelect");
+      event.target.classList.add("bg-headerSelect");
+      headerExists.current = true;
+      let newElement = <HeaderInfinte key="header" />;
+      setElements([...elements, newElement]);
+      setCurrentElement(newElement);
+    } else {
+      event.target.classList.remove("bg-headerSelect");
+      event.target.classList.add("bg-headerNoSelect");
+      headerExists.current = false;
+      let newElements = elements.filter((element) => {
+        if (element.key != "header") {
+          return element;
+        }
+      });
+      setElements([newElements]);
+    }
+  }
+
   return (
     <main className="flex justify-center w-screen">
       <div
@@ -8,9 +37,12 @@ export default function Home() {
         className="mr-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
       >
         <p className="text-center text-2xl mb-4">Layout</p>
-        <button className="border-white border-2 pl-8 pr-8 mb-2 rounded-md">
+        <button
+          className="border-white border-2 pl-8 pr-8 mb-2 rounded-md"
+          onClick={handleNewHeader}
+        >
           Header
-        </button>{" "}
+        </button>
         <br />
         <button className="border-white border-2 pl-8 pr-8 rounded-md">
           Footer
@@ -20,7 +52,9 @@ export default function Home() {
         <div
           id="scene"
           className="w-sceneW h-sceneH mt-10 border-white border-2 rounded-sm"
-        ></div>
+        >
+          {elements}
+        </div>
         <div className="flex justify-center">
           <div className="w-10 h-20 border-white border-2"></div>
         </div>
@@ -39,7 +73,9 @@ export default function Home() {
       <div
         id="theme"
         className="ml-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
-      > <ColorPicker /></div>
+      >
+        <ColorPicker />
+      </div>
     </main>
   );
 }
