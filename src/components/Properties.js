@@ -1,6 +1,7 @@
 "use client";
 
 import Height from "./Properties/Height";
+import Width from "./Properties/Width";
 import Background from "./Properties/Background";
 
 export default function Properties({ newProperty, currentElement }) {
@@ -24,6 +25,7 @@ export default function Properties({ newProperty, currentElement }) {
       case "box":
         propertyList = [
           <Height handleNewProperty={handleNewProperty} key="height" />,
+          <Width handleNewProperty={handleNewProperty} key="width" />,
           <Background handleNewProperty={handleNewProperty} key="background" />,
         ];
         break;
