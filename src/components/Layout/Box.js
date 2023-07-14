@@ -1,13 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState, useRef } from "react";
 
 import { currentProperties } from "../../app/context";
+import Draggable from "react-draggable";
 
-export default function Header({ id, setCurrentElement }) {
+export default function Box({ id, setCurrentElement, top, left }) {
   const newProperties = useContext(currentProperties);
 
   //----Element's default properties
   let defaultProperties = {
-    height: "20px",
+    height: "50px",
+    width: "50px",
+    top: "0px",
+    left: "0px",
     backgroundColor: "#2A2A2A",
   };
 
@@ -23,14 +27,12 @@ export default function Header({ id, setCurrentElement }) {
   //----Component to return (defined as a variable to allow the currentElement state to access it)
   let component = (
     <div
+      className={`sceneC w-[50px] h-[50px] bg-[#696767]`}
+      style={defaultProperties}
       key={id}
       id={id}
-      className={`sceneC w-sceneW text-black text-center`}
-      style={defaultProperties}
       onClick={updateCurrentElement}
-    >
-      Header
-    </div>
+    ></div>
   );
 
   //----Updates current element to be this one
@@ -38,5 +40,5 @@ export default function Header({ id, setCurrentElement }) {
     setCurrentElement(component);
   }
 
-  return component;
+  return <Draggable bounds="parent">{component}</Draggable>;
 }
