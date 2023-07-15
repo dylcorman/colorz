@@ -1,13 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { currentProperties } from "./context";
 
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
+import Box from "../components/Layout/Box";
+
 import Properties from "@/components/Properties";
 
 export default function Home() {
+  const boxCount = useRef("box0");
   const [elements, setElements] = useState([]); //Drag and drop elements
   const [sceneHeader, setSceneHeader] = useState(false); //Scene header
   const [sceneFooter, setSceneFooter] = useState(false); //Scene footer
@@ -26,7 +29,7 @@ export default function Home() {
         />
       );
       setSceneHeader(newElement);
-      setCurrentElement(newElement);
+      setCurrentElement(newElement); //Set current element equal to this
     } else {
       event.target.classList.remove("bg-headerSelect");
       event.target.classList.add("bg-headerNoSelect");
@@ -47,13 +50,28 @@ export default function Home() {
         />
       );
       setSceneFooter(newElement);
-      setCurrentElement(newElement);
+      setCurrentElement(newElement); //Set current element equal to this
     } else {
       event.target.classList.remove("bg-headerSelect");
       event.target.classList.add("bg-headerNoSelect");
       setSceneFooter(false);
       //Need to change current element as well
     }
+  }
+
+  function handleNewBox() {
+    let countArray = boxCount.current.split("");
+    let count = parseInt(countArray.pop());
+    boxCount.current = `box${count + 1}`; //Increment key/id counter
+    let newElement = (
+      <Box
+        key={boxCount.current}
+        id={boxCount.current}
+        setCurrentElement={setCurrentElement}
+      />
+    );
+    setElements([...elements, newElement]);
+    setCurrentElement(newElement); //Set current element equal to this
   }
 
   function newProperty(property) {
@@ -67,6 +85,7 @@ export default function Home() {
     setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
 
+  //----Manages border for selected current element
   useEffect(() => {
     if (currentElement) {
       let allSceneElements = document.querySelectorAll(`.sceneC`);
@@ -101,6 +120,13 @@ export default function Home() {
           >
             Footer
           </button>
+          <hr></hr>
+          <button
+            className="border-white border-2 pl-8 pr-8 rounded-md"
+            onClick={handleNewBox}
+          >
+            Box
+          </button>
         </div>
         <div>
           <div
@@ -110,8 +136,7 @@ export default function Home() {
             <div id="header" className="basis-content">
               {sceneHeader}
             </div>
-            <div id="moveable" className="grow">
-              {" "}
+            <div id="moveable" className="grow relative cursor-move">
               {elements}
             </div>
             <div id="footer" className="basis-content">
@@ -146,23 +171,3 @@ export default function Home() {
     </currentProperties.Provider>
   );
 }
-
-//Elements header/footer adaption base
-// if (!footerExists.current) {
-//   event.target.classList.remove("bg-headerNoSelect");
-//   event.target.classList.add("bg-headerSelect");
-//   footerExists.current = true;
-//   let newElement = <Footer key="footer" id="footer" />;
-//   setElements([...elements, newElement]);
-//   setCurrentElement(newElement);
-// } else {
-//   event.target.classList.remove("bg-headerSelect");
-//   event.target.classList.add("bg-headerNoSelect");
-//   footerExists.current = false;
-//   let newElements = elements.filter((element) => {
-//     if (element.key != "footer") {
-//       return element;
-//     }
-//   });
-//   setElements([newElements]);
-// }

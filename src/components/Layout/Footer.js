@@ -33,8 +33,8 @@ export default function Footer({ id, setCurrentElement }) {
     </div>
   );
 
-  //----Updates the currentElement state
-  function updateCurrentElement(event) {
+  //----Updates current element to be this one
+  function updateCurrentElement() {
     setCurrentElement(component);
   }
 
