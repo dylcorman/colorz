@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { currentProperties } from "./context";
 
 import HeaderInfinte from "../components/HeaderInfinite";
-import ColorPicker from "@/components/ColorPicker";
+import Properties from "@/components/Properties";
 
 export default function Home() {
   const [elements, setElements] = useState([]);
@@ -35,10 +35,11 @@ export default function Home() {
 
   function newProperty(property) {
     const propertyKey = Object.keys(property); //Get an array of properties keys (only 1)
-    let newKey = propertyKey[0]; //Get the new property'skey
-    let sceneProperties = { elementKey: currentElement.key }; //Add current element's key
-    sceneProperties[newKey] = property[newKey].toString(); //Add new property's key and it's value
-    setSceneProperties(sceneProperties); //Set the sceneProperties state to above created object
+    let newKey = propertyKey[0]; //Get the new property's key
+    let propertiesCopy = { ...sceneProperties }; //Create a copy of current properties
+    propertiesCopy.elementKey = currentElement.key; //Update current element's key
+    propertiesCopy[newKey] = property[newKey].toString(); //Create/update new property's key and value
+    setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
 
   return (
@@ -86,7 +87,10 @@ export default function Home() {
           id="theme"
           className="ml-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
         >
-          <ColorPicker newProperty={newProperty} />
+          <Properties
+            newProperty={newProperty}
+            currentElement={currentElement}
+          />
         </div>
       </main>
     </currentProperties.Provider>

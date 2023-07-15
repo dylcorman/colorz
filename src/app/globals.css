@@ -25,3 +25,12 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.colorPickButton {
+  background: linear-gradient(
+    45deg,
+    rgba(120, 2, 6, 1) 0%,
+    rgba(39, 88, 99, 1) 50%,
+    rgba(6, 17, 97, 1) 99%
+  );
+}

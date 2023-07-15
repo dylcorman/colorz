@@ -7,20 +7,22 @@ export default function HeaderInfinite({ id }) {
 
   //----Element's default properties
   let defaultProperties = {
-    height: "12px",
+    height: "20px",
+    background: "#2A2A2A",
   };
+  console.log("------------", newProperties);
 
   //----If this element's id (key) matches the user's currently selected element id assign new property values and show s
   if (newProperties.elementKey === id) {
     for (let key in newProperties) {
       if (key != "elementKey") {
-        defaultProperties[key] = `${newProperties[key]}px`; //Assign new value to key
+        defaultProperties[key] = newProperties[key]; //Assign new value to key
       }
     }
   }
   return (
     <div
-      className={`w-sceneW bg-headerNoSelect text-black text-center`}
+      className={`w-sceneW text-black text-center`}
       style={defaultProperties}
     >
       Header
