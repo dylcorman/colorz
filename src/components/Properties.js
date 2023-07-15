@@ -1,16 +1,17 @@
 "use client";
 
-import Height from "./Height";
-import Background from "./Background";
+import Height from "./Properties/Height";
+import Background from "./Properties/Background";
 
 export default function Properties({ newProperty, currentElement }) {
   let propertyList = [];
   if (currentElement) {
-    switch (currentElement.key) {
+    switch (currentElement.props.id) {
       case "header":
+      case "footer":
         propertyList = [
-          <Height handleNewProperty={handleNewProperty} />,
-          <Background handleNewProperty={handleNewProperty} />,
+          <Height handleNewProperty={handleNewProperty} key="height" />,
+          <Background handleNewProperty={handleNewProperty} key="background" />,
         ];
         break;
     }

@@ -1,35 +1,58 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import { currentProperties } from "./context";
 
-import HeaderInfinte from "../components/HeaderInfinite";
+import Header from "../components/Layout/Header";
+import Footer from "../components/Layout/Footer";
 import Properties from "@/components/Properties";
 
 export default function Home() {
-  const [elements, setElements] = useState([]);
+  const [elements, setElements] = useState([]); //Drag and drop elements
+  const [sceneHeader, setSceneHeader] = useState(false); //Scene header
+  const [sceneFooter, setSceneFooter] = useState(false); //Scene footer
   const [currentElement, setCurrentElement] = useState(null);
-  const headerExists = useRef(false);
   const [sceneProperties, setSceneProperties] = useState({}); //An element's height
 
   function handleNewHeader(event) {
-    if (!headerExists.current) {
+    if (!sceneHeader) {
       event.target.classList.remove("bg-headerNoSelect");
       event.target.classList.add("bg-headerSelect");
-      headerExists.current = true;
-      let newElement = <HeaderInfinte key="header" id="header" />;
-      setElements([...elements, newElement]);
+      let newElement = (
+        <Header
+          key="header"
+          id="header"
+          setCurrentElement={setCurrentElement}
+        />
+      );
+      setSceneHeader(newElement);
       setCurrentElement(newElement);
     } else {
       event.target.classList.remove("bg-headerSelect");
       event.target.classList.add("bg-headerNoSelect");
-      headerExists.current = false;
-      let newElements = elements.filter((element) => {
-        if (element.key != "header") {
-          return element;
-        }
-      });
-      setElements([newElements]);
+      setSceneHeader(false);
+      //Need to change current element as well
+    }
+  }
+
+  function handleNewFooter(event) {
+    if (!sceneFooter) {
+      event.target.classList.remove("bg-headerNoSelect");
+      event.target.classList.add("bg-headerSelect");
+      let newElement = (
+        <Footer
+          key="footer"
+          id="footer"
+          setCurrentElement={setCurrentElement}
+        />
+      );
+      setSceneFooter(newElement);
+      setCurrentElement(newElement);
+    } else {
+      event.target.classList.remove("bg-headerSelect");
+      event.target.classList.add("bg-headerNoSelect");
+      setSceneFooter(false);
+      //Need to change current element as well
     }
   }
 
@@ -37,10 +60,25 @@ export default function Home() {
     const propertyKey = Object.keys(property); //Get an array of properties keys (only 1)
     let newKey = propertyKey[0]; //Get the new property's key
     let propertiesCopy = { ...sceneProperties }; //Create a copy of current properties
-    propertiesCopy.elementKey = currentElement.key; //Update current element's key
-    propertiesCopy[newKey] = property[newKey].toString(); //Create/update new property's key and value
+    propertiesCopy[currentElement.key] = {
+      ...sceneProperties[currentElement.key], //Assigns any previous properties to the copied element
+    };
+    propertiesCopy[currentElement.key][newKey] = property[newKey].toString(); //Create/update new property's key and value
     setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
+
+  useEffect(() => {
+    if (currentElement) {
+      let allSceneElements = document.querySelectorAll(`.sceneC`);
+      allSceneElements.forEach((element) => {
+        if (element.id != currentElement.key) {
+          element.style.border = "none";
+        } else {
+          element.style.border = "2px solid #B2B65E"; //Current Element's border
+        }
+      });
+    }
+  }, [currentElement]);
 
   return (
     <currentProperties.Provider value={sceneProperties}>
@@ -57,16 +95,28 @@ export default function Home() {
             Header
           </button>
           <br />
-          <button className="border-white border-2 pl-8 pr-8 rounded-md">
+          <button
+            className="border-white border-2 pl-8 pr-8 rounded-md"
+            onClick={handleNewFooter}
+          >
             Footer
           </button>
         </div>
         <div>
           <div
             id="scene"
-            className="w-sceneW h-sceneH mt-10 border-white border-2 rounded-sm"
+            className="flex-col w-sceneW h-sceneH mt-10 border-white border-2 rounded-sm"
           >
-            {elements}
+            <div id="header" className="basis-content">
+              {sceneHeader}
+            </div>
+            <div id="moveable" className="grow">
+              {" "}
+              {elements}
+            </div>
+            <div id="footer" className="basis-content">
+              {sceneFooter}
+            </div>
           </div>
           <div className="flex justify-center">
             <div className="w-10 h-20 border-white border-2"></div>
@@ -96,3 +146,23 @@ export default function Home() {
     </currentProperties.Provider>
   );
 }
+
+//Elements header/footer adaption base
+// if (!footerExists.current) {
+//   event.target.classList.remove("bg-headerNoSelect");
+//   event.target.classList.add("bg-headerSelect");
+//   footerExists.current = true;
+//   let newElement = <Footer key="footer" id="footer" />;
+//   setElements([...elements, newElement]);
+//   setCurrentElement(newElement);
+// } else {
+//   event.target.classList.remove("bg-headerSelect");
+//   event.target.classList.add("bg-headerNoSelect");
+//   footerExists.current = false;
+//   let newElements = elements.filter((element) => {
+//     if (element.key != "footer") {
+//       return element;
+//     }
+//   });
+//   setElements([newElements]);
+// }
