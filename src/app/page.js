@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import { currentProperties } from "./context";
+import { currentElementContext } from "./context";
 
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
@@ -10,6 +11,7 @@ import Box from "../components/Layout/Box";
 import Properties from "@/components/Properties";
 
 export default function Home() {
+  const [currentElementState, setCurrentElementState] = useState();
   const boxCount = useRef("box0");
   const [elements, setElements] = useState([]); //Drag and drop elements
   const [sceneHeader, setSceneHeader] = useState(false); //Scene header
@@ -73,6 +75,7 @@ export default function Home() {
         key={boxCount.current}
         id={boxCount.current}
         setCurrentElement={setCurrentElement}
+        handleNewProperty={newProperty}
       />
     );
     setElements([...elements, newElement]);
@@ -80,6 +83,7 @@ export default function Home() {
   }
 
   function newProperty(property) {
+    console.log("key", currentElement.key);
     const propertyKey = Object.keys(property); //Get an array of properties keys (only 1)
     let newKey = propertyKey[0]; //Get the new property's key
     let propertiesCopy = { ...sceneProperties }; //Create a copy of current properties
@@ -93,7 +97,8 @@ export default function Home() {
   //----Manages border for selected current element
   useEffect(() => {
     if (currentElement) {
-      console.log("CE: ", currentElement);
+      setCurrentElementState("change"); //forces rerender for property components
+      setCurrentElementState(currentElement.key);
       let allSceneElements = document.querySelectorAll(`.sceneC`);
       allSceneElements.forEach((element) => {
         if (element.id != currentElement.key) {
@@ -106,77 +111,79 @@ export default function Home() {
   }, [currentElement]);
 
   return (
-    <currentProperties.Provider value={sceneProperties}>
-      <main className="flex justify-center w-screen">
-        <div
-          id="layout"
-          className="mr-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
-        >
-          <p className="text-center text-2xl mb-4">Layout</p>
-          <button
-            className="border-white border-2 pl-8 pr-8 mb-2 rounded-md"
-            onClick={handleNewHeader}
-          >
-            Header
-          </button>
-          <br />
-          <button
-            className="border-white border-2 pl-8 pr-8 rounded-md"
-            onClick={handleNewFooter}
-          >
-            Footer
-          </button>
-          <hr></hr>
+    <currentElementContext.Provider value={currentElementState}>
+      <currentProperties.Provider value={sceneProperties}>
+        <main className="flex justify-center w-screen">
           <div
-            id="addBox"
-            className="flex ml-5 mt-5 justify-center items-center border-white border-2 rounded-md w-[70px] h-[70px]"
-            onClick={handleNewBox}
+            id="layout"
+            className="mr-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
           >
-            <div>
-              <span className="font-bold">+</span> Box
+            <p className="text-center text-2xl mb-4">Layout</p>
+            <button
+              className="border-white border-2 pl-8 pr-8 mb-2 rounded-md"
+              onClick={handleNewHeader}
+            >
+              Header
+            </button>
+            <br />
+            <button
+              className="border-white border-2 pl-8 pr-8 rounded-md"
+              onClick={handleNewFooter}
+            >
+              Footer
+            </button>
+            <hr></hr>
+            <div
+              id="addBox"
+              className="flex ml-5 mt-5 justify-center items-center border-white border-2 rounded-md w-[70px] h-[70px]"
+              onClick={handleNewBox}
+            >
+              <div>
+                <span className="font-bold">+</span> Box
+              </div>
             </div>
           </div>
-        </div>
-        <div>
+          <div>
+            <div
+              id="scene"
+              className="flex-col w-sceneW h-sceneH mt-10 border-white border-2 rounded-sm"
+            >
+              <div id="header" className="basis-content">
+                {sceneHeader}
+              </div>
+              <div id="moveable" className="grow relative cursor-move">
+                {elements}
+              </div>
+              <div id="footer" className="basis-content">
+                {sceneFooter}
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-10 h-20 border-white border-2"></div>
+            </div>
+            <div className="flex justify-center">
+              <hr className="w-40"></hr>
+            </div>
+            <div className="flex justify-center gap-40 mt-10">
+              <button className="border-white border-2 pl-1 pr-1 rounded-md">
+                Export Theme
+              </button>
+              <button className="border-white border-2 pl-1 pr-1 rounded-md">
+                Save Theme
+              </button>
+            </div>
+          </div>
           <div
-            id="scene"
-            className="flex-col w-sceneW h-sceneH mt-10 border-white border-2 rounded-sm"
+            id="theme"
+            className="ml-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
           >
-            <div id="header" className="basis-content">
-              {sceneHeader}
-            </div>
-            <div id="moveable" className="grow relative cursor-move">
-              {elements}
-            </div>
-            <div id="footer" className="basis-content">
-              {sceneFooter}
-            </div>
+            <Properties
+              newProperty={newProperty}
+              currentElement={currentElement}
+            />
           </div>
-          <div className="flex justify-center">
-            <div className="w-10 h-20 border-white border-2"></div>
-          </div>
-          <div className="flex justify-center">
-            <hr className="w-40"></hr>
-          </div>
-          <div className="flex justify-center gap-40 mt-10">
-            <button className="border-white border-2 pl-1 pr-1 rounded-md">
-              Export Theme
-            </button>
-            <button className="border-white border-2 pl-1 pr-1 rounded-md">
-              Save Theme
-            </button>
-          </div>
-        </div>
-        <div
-          id="theme"
-          className="ml-VW5 w-layout_themeW h-layout_themeH bg-layoutBg"
-        >
-          <Properties
-            newProperty={newProperty}
-            currentElement={currentElement}
-          />
-        </div>
-      </main>
-    </currentProperties.Provider>
+        </main>
+      </currentProperties.Provider>
+    </currentElementContext.Provider>
   );
 }

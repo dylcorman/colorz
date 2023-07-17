@@ -1,11 +1,13 @@
-import { useContext, useState, useRef } from "react";
+import { Rnd } from "react-rnd";
+import { useContext, useState, useEffect } from "react";
 
 import { currentProperties } from "../../app/context";
-import { Rnd } from "react-rnd";
+import { currentElementContext } from "../../app/context";
 
-export default function Box({ id, setCurrentElement }) {
+export default function Box({ id, setCurrentElement, handleNewProperty }) {
   //----Context
   const newProperties = useContext(currentProperties);
+  const currentElement = useContext(currentElementContext);
 
   //----State
   const [x, setX] = useState(100); //The box's x position relative to its parent
@@ -17,6 +19,34 @@ export default function Box({ id, setCurrentElement }) {
   let defaultProperties = {
     backgroundColor: "#2A2A2A",
   };
+
+  //----If this element's id matches the theme element's id assign new property values,
+  for (let element in newProperties) {
+    if (element === id) {
+      for (let property in newProperties[element]) {
+        if (property !== "width" && property != "height") {
+          defaultProperties[property] = newProperties[element][property];
+        }
+      }
+    }
+  }
+
+  //----useEffect required in order to prevent element from continually rerendering because setHeight and setWidth statees are directly called in this function
+  useEffect(() => {
+    for (let element in newProperties) {
+      //If this element's id matches the theme element's id and is current selected assign new height/width
+      if (element === id && element === currentElement) {
+        console.log("Changing: ", element);
+        for (let property in newProperties[element]) {
+          if (property === "width") {
+            setWidth(newProperties[element][property]);
+          } else if (property === "height") {
+            setHeight(newProperties[element][property]);
+          }
+        }
+      }
+    }
+  }, [newProperties]);
 
   //----Component to return (defined as a variable to allow the currentElement state to access it)
   let component = (
@@ -40,29 +70,14 @@ export default function Box({ id, setCurrentElement }) {
         setHeight(ref.style.height);
         setX(position.x);
         setY(position.y);
+        // handleNewProperty(ref.style.height, "height");
+        // handleNewProperty(ref.style.width, "width");
       }}
       onDrag={updateCurrentElement}
       onResize={updateCurrentElement}
       onClick={updateCurrentElement}
     ></Rnd>
   );
-
-  //----If this element's id matches the user's currently selected element id assign new property values
-  for (let element in newProperties) {
-    if (element === id) {
-      for (let property in newProperties[element]) {
-        if (property != "width" && property != "height") {
-          defaultProperties[property] = newProperties[element][property];
-        } else if (property === "width") {
-          component.props.size.width = newProperties[element][property];
-          delete newProperties[element][property]; //Prevents above line from resetting a user resize
-        } else if (property === "height") {
-          component.props.size.height = newProperties[element][property];
-          delete newProperties[element][property]; //Prevents above line from resetting a user resize
-        }
-      }
-    }
-  }
 
   //----Updates current element to be this one
   function updateCurrentElement() {
