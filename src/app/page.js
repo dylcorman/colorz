@@ -60,6 +60,11 @@ export default function Home() {
   }
 
   function handleNewBox() {
+    let addBox = document.querySelector("#addBox");
+    addBox.style.backgroundColor = "yellow";
+    setTimeout(() => {
+      addBox.style.backgroundColor = "";
+    }, 100);
     let countArray = boxCount.current.split("");
     let count = parseInt(countArray.pop());
     boxCount.current = `box${count + 1}`; //Increment key/id counter
@@ -88,6 +93,7 @@ export default function Home() {
   //----Manages border for selected current element
   useEffect(() => {
     if (currentElement) {
+      console.log("CE: ", currentElement);
       let allSceneElements = document.querySelectorAll(`.sceneC`);
       allSceneElements.forEach((element) => {
         if (element.id != currentElement.key) {
@@ -121,12 +127,15 @@ export default function Home() {
             Footer
           </button>
           <hr></hr>
-          <button
-            className="border-white border-2 pl-8 pr-8 rounded-md"
+          <div
+            id="addBox"
+            className="flex ml-5 mt-5 justify-center items-center border-white border-2 rounded-md w-[70px] h-[70px]"
             onClick={handleNewBox}
           >
-            Box
-          </button>
+            <div>
+              <span className="font-bold">+</span> Box
+            </div>
+          </div>
         </div>
         <div>
           <div
