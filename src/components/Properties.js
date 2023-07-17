@@ -3,8 +3,15 @@
 import Height from "./Properties/Height";
 import Width from "./Properties/Width";
 import Background from "./Properties/Background";
+import Name_Delete from "./Properties/Name_Delete";
 
-export default function Properties({ newProperty, currentElement }) {
+export default function Properties({
+  newProperty,
+  currentElement,
+  elements,
+  setElements,
+  setCurrentElementState,
+}) {
   let propertyList = [];
   if (currentElement) {
     //----Remove box count from box id
@@ -24,6 +31,12 @@ export default function Properties({ newProperty, currentElement }) {
         break;
       case "box":
         propertyList = [
+          <Name_Delete
+            elements={elements}
+            setElements={setElements}
+            setCurrentElementState={setCurrentElementState}
+            key="delete"
+          />,
           <Height handleNewProperty={handleNewProperty} key="height" />,
           <Width handleNewProperty={handleNewProperty} key="width" />,
           <Background handleNewProperty={handleNewProperty} key="background" />,
