@@ -78,6 +78,7 @@ export default function Home() {
         handleNewProperty={newProperty}
       />
     );
+
     setElements([...elements, newElement]);
     setCurrentElement(newElement); //Set current element equal to this
   }
@@ -180,6 +181,9 @@ export default function Home() {
             <Properties
               newProperty={newProperty}
               currentElement={currentElement}
+              elements={elements}
+              setElements={setElements}
+              setCurrentElementState={setCurrentElementState}
             />
           </div>
         </main>

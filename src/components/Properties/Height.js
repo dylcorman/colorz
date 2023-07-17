@@ -7,11 +7,6 @@ export default function Height({ handleNewProperty }) {
   const newProperties = useContext(currentProperties);
   const currentElement = useContext(currentElementContext);
 
-  if (currentElement) {
-    console.log("Current Element: ", currentElement);
-  }
-  console.log("rendered");
-
   return (
     <>
       <p>Height: </p>
