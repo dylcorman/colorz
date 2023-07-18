@@ -14,8 +14,8 @@ export default function Height({ handleNewProperty }) {
         type="text"
         placeholder="20px"
         value={
-          newProperties[currentElement]
-            ? newProperties[currentElement].height
+          newProperties[currentElement.props.id]
+            ? newProperties[currentElement.props.id].height
             : ""
         }
         onChange={(event) => handleNewProperty(event.target.value, "height")}

@@ -35,8 +35,7 @@ export default function Box({ id, setCurrentElement, handleNewProperty }) {
   useEffect(() => {
     for (let element in newProperties) {
       //If this element's id matches the theme element's id and is current selected assign new height/width
-      if (element === id && element === currentElement) {
-        console.log("Changing: ", element);
+      if (element === id && element === currentElement.props.id) {
         for (let property in newProperties[element]) {
           if (property === "width") {
             setWidth(newProperties[element][property]);
@@ -53,6 +52,7 @@ export default function Box({ id, setCurrentElement, handleNewProperty }) {
     <Rnd
       key={id}
       id={id}
+      type="box"
       className={`sceneC bg-[#696767]`}
       style={defaultProperties}
       bounds={"parent"}
@@ -70,8 +70,6 @@ export default function Box({ id, setCurrentElement, handleNewProperty }) {
         setHeight(ref.style.height);
         setX(position.x);
         setY(position.y);
-        // handleNewProperty(ref.style.height, "height");
-        // handleNewProperty(ref.style.width, "width");
       }}
       onDrag={updateCurrentElement}
       onResize={updateCurrentElement}

@@ -25,6 +25,7 @@ export default function Header({ id, setCurrentElement }) {
     <div
       key={id}
       id={id}
+      type="header"
       className={`sceneC w-sceneW text-black text-center`}
       style={defaultProperties}
       onClick={updateCurrentElement}
