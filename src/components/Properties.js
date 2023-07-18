@@ -1,4 +1,6 @@
 "use client";
+import { useContext } from "react";
+import { currentElementContext } from "../app/context";
 
 import Height from "./Properties/Height";
 import Width from "./Properties/Width";
@@ -7,20 +9,16 @@ import Name_Delete from "./Properties/Name_Delete";
 
 export default function Properties({
   newProperty,
-  currentElement,
   elements,
   setElements,
-  setCurrentElementState,
+  setCurrentElement,
 }) {
+  const currentElement = useContext(currentElementContext);
   let propertyList = [];
   if (currentElement) {
     //----Remove box count from box id
-    let type = currentElement.props.id;
-    let typeArray = currentElement.props.id.split("");
-    typeArray.pop();
-    if (typeArray.join("") === "box") {
-      type = "box";
-    }
+    let type = currentElement.props.type;
+    console.log("TYPE: ", type);
     switch (type) {
       case "header":
       case "footer":
@@ -34,7 +32,7 @@ export default function Properties({
           <Name_Delete
             elements={elements}
             setElements={setElements}
-            setCurrentElementState={setCurrentElementState}
+            setCurrentElement={setCurrentElement}
             key="delete"
           />,
           <Height handleNewProperty={handleNewProperty} key="height" />,

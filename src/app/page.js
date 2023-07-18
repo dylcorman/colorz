@@ -11,12 +11,11 @@ import Box from "../components/Layout/Box";
 import Properties from "@/components/Properties";
 
 export default function Home() {
-  const [currentElementState, setCurrentElementState] = useState();
+  const [currentElement, setCurrentElement] = useState(); //current element context
   const boxCount = useRef("box0");
   const [elements, setElements] = useState([]); //Drag and drop elements
   const [sceneHeader, setSceneHeader] = useState(false); //Scene header
   const [sceneFooter, setSceneFooter] = useState(false); //Scene footer
-  const [currentElement, setCurrentElement] = useState(null);
   const [sceneProperties, setSceneProperties] = useState({}); //An element's height
 
   function handleNewHeader(event) {
@@ -27,6 +26,7 @@ export default function Home() {
         <Header
           key="header"
           id="header"
+          type="header"
           setCurrentElement={setCurrentElement}
         />
       );
@@ -48,6 +48,7 @@ export default function Home() {
         <Footer
           key="footer"
           id="footer"
+          type="footer"
           setCurrentElement={setCurrentElement}
         />
       );
@@ -74,6 +75,7 @@ export default function Home() {
       <Box
         key={boxCount.current}
         id={boxCount.current}
+        type="box"
         setCurrentElement={setCurrentElement}
         handleNewProperty={newProperty}
       />
@@ -84,25 +86,24 @@ export default function Home() {
   }
 
   function newProperty(property) {
-    console.log("key", currentElement.key);
+    console.log("key", currentElement);
     const propertyKey = Object.keys(property); //Get an array of properties keys (only 1)
     let newKey = propertyKey[0]; //Get the new property's key
     let propertiesCopy = { ...sceneProperties }; //Create a copy of current properties
-    propertiesCopy[currentElement.key] = {
-      ...sceneProperties[currentElement.key], //Assigns any previous properties to the copied element
+    propertiesCopy[currentElement] = {
+      ...sceneProperties[currentElement], //Assigns any previous properties to the copied element
     };
-    propertiesCopy[currentElement.key][newKey] = property[newKey].toString(); //Create/update new property's key and value
+    propertiesCopy[currentElement][newKey] = property[newKey].toString(); //Create/update new property's key and value
     setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
 
   //----Manages border for selected current element
   useEffect(() => {
     if (currentElement) {
-      setCurrentElementState("change"); //forces rerender for property components
-      setCurrentElementState(currentElement.key);
       let allSceneElements = document.querySelectorAll(`.sceneC`);
       allSceneElements.forEach((element) => {
-        if (element.id != currentElement.key) {
+        console.log("CE: ", currentElement, "This E: ", element.id);
+        if (element.id != currentElement.props.id) {
           element.style.border = "none";
         } else {
           element.style.border = "2px solid #B2B65E"; //Current Element's border
@@ -112,7 +113,7 @@ export default function Home() {
   }, [currentElement]);
 
   return (
-    <currentElementContext.Provider value={currentElementState}>
+    <currentElementContext.Provider value={currentElement}>
       <currentProperties.Provider value={sceneProperties}>
         <main className="flex justify-center w-screen">
           <div
@@ -183,7 +184,7 @@ export default function Home() {
               currentElement={currentElement}
               elements={elements}
               setElements={setElements}
-              setCurrentElementState={setCurrentElementState}
+              setCurrentElement={setCurrentElement}
             />
           </div>
         </main>

@@ -25,6 +25,7 @@ export default function Footer({ id, setCurrentElement }) {
     <div
       key={id}
       id={id}
+      type="footer"
       className={`sceneC w-sceneW text-black text-center`}
       style={defaultProperties}
       onClick={updateCurrentElement}
