@@ -18,7 +18,6 @@ export default function Properties({
   if (currentElement) {
     //----Remove box count from box id
     let type = currentElement.props.type;
-    console.log("TYPE: ", type);
     switch (type) {
       case "header":
       case "footer":

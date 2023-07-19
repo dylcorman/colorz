@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { currentProperties } from "./context";
 import { currentElementContext } from "./context";
 
+import PageHeader from "../components/PageHeader";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import Box from "../components/Layout/Box";
@@ -86,14 +87,14 @@ export default function Home() {
   }
 
   function newProperty(property) {
-    console.log("key", currentElement);
+    console.log("key", currentElement.props.id);
     const propertyKey = Object.keys(property); //Get an array of properties keys (only 1)
     let newKey = propertyKey[0]; //Get the new property's key
     let propertiesCopy = { ...sceneProperties }; //Create a copy of current properties
-    propertiesCopy[currentElement] = {
-      ...sceneProperties[currentElement], //Assigns any previous properties to the copied element
+    propertiesCopy[currentElement.key] = {
+      ...sceneProperties[currentElement.key], //Assigns any previous properties to the copied element
     };
-    propertiesCopy[currentElement][newKey] = property[newKey].toString(); //Create/update new property's key and value
+    propertiesCopy[currentElement.key][newKey] = property[newKey].toString(); //Create/update new property's key and value
     setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
 
@@ -115,6 +116,7 @@ export default function Home() {
   return (
     <currentElementContext.Provider value={currentElement}>
       <currentProperties.Provider value={sceneProperties}>
+        <PageHeader />
         <main className="flex justify-center w-screen">
           <div
             id="layout"

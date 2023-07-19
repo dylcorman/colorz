@@ -35,6 +35,8 @@ body {
   );
 }
 
-#scene {
+#scene,
+.inputs,
+.createError {
   display: flex;
 }
