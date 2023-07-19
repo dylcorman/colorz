@@ -7,12 +7,14 @@ import { currentElementContext } from "./context";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import Box from "../components/Layout/Box";
+import TextBox from "@/components/Layout/TextBox";
 
 import Properties from "@/components/Properties";
 
 export default function Home() {
   const [currentElement, setCurrentElement] = useState(); //current element context
   const boxCount = useRef("box0");
+  const textBoxCount = useRef("textBox0"); // Ref for TextBox count
   const [elements, setElements] = useState([]); //Drag and drop elements
   const [sceneHeader, setSceneHeader] = useState(false); //Scene header
   const [sceneFooter, setSceneFooter] = useState(false); //Scene footer
@@ -97,6 +99,29 @@ export default function Home() {
     setSceneProperties(propertiesCopy); //Set the sceneProperties state to copy
   }
 
+  function handleNewTextBox() {
+    let addTextBox = document.querySelector("#addTextBox");
+    addTextBox.style.backgroundColor = "yellow";
+    setTimeout(() => {
+      addTextBox.style.backgroundColor = "";
+    }, 100);
+    let countArray = textBoxCount.current.split("");
+    let count = parseInt(countArray.pop());
+    textBoxCount.current = `textBox${count + 1}`; // Increment key/id counter
+    let newElement = (
+      <TextBox
+        key={textBoxCount.current}
+        id={textBoxCount.current}
+        type="textbox"
+        setCurrentElement={setCurrentElement}
+        handleNewProperty={newProperty}
+      />
+    );
+
+    setElements([...elements, newElement]);
+    setCurrentElement(newElement); // Set current element equal to this
+  }
+
   //----Manages border for selected current element
   useEffect(() => {
     if (currentElement) {
@@ -142,6 +167,16 @@ export default function Home() {
             >
               <div>
                 <span className="font-bold">+</span> Box
+              </div>
+            </div>
+            {/* New TextBox button */}
+            <div
+              id="addTextBox"
+              className="flex ml-5 mt-5 justify-center items-center border-white border-2 rounded-md w-[90px] h-[70px]"
+              onClick={handleNewTextBox}
+            >
+              <div>
+                <span className="font-bold">+</span> TextBox
               </div>
             </div>
           </div>
