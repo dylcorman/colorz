@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { currentProperties } from "./context";
 import { currentElementContext } from "./context";
 
+import PageHeader from "../components/PageHeader";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import Box from "../components/Layout/Box";
@@ -115,6 +116,7 @@ export default function Home() {
   return (
     <currentElementContext.Provider value={currentElement}>
       <currentProperties.Provider value={sceneProperties}>
+        <PageHeader />
         <main className="flex justify-center w-screen">
           <div
             id="layout"

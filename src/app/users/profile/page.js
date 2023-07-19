@@ -5,22 +5,30 @@ import { useRouter } from "next/navigation";
 import handleLogout from "@/app/utils/handleLogout";
 import axios from "axios";
 import setAuthToken from "@/app/utils/setAuthToken";
+import PageHeader from "../../../components/PageHeader";
 
 export default function Profile() {
   const router = useRouter();
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
+  //----Sets user expiration time
   const expirationTime = new Date(
     parseInt(localStorage.getItem("expiration")) * 1000
   );
   let currentTime = Date.now();
 
-  // Lougout user after expiration time is met
+  //----Lougout user after expiration time is met
   if (currentTime >= expirationTime) {
     handleLogout();
-    alert("Session has ended. Please login to continue.");
     router.push("/users/login");
+  }
+
+  //----Handles user logout functionality
+  function handleLogoutButton() {
+    handleLogout();
+    router.push("/"); //Redirect user to home page
+    console.log("TokenZ: ", localStorage.getItem("jwtToken"));
   }
 
   useEffect(() => {
@@ -53,11 +61,12 @@ export default function Profile() {
   if (!data) return <p>No data shown...</p>;
   return (
     <div className="">
+      <PageHeader />
       <nav className="bg-slate-400">
         <a className="mr-4" href="/">
           Home
         </a>
-        <button onClick={handleLogout} href="">
+        <button onClick={handleLogoutButton} href="">
           Logout
         </button>
       </nav>

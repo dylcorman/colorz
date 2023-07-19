@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import PageHeader from "../../../components/PageHeader";
 
 const Signup = () => {
   const router = useRouter();
@@ -76,51 +77,54 @@ const Signup = () => {
   }
 
   return (
-    <div className="flex justify-center text-black bg-slate-400">
-      <form onSubmit={handleSubmit}>
-        <h1>Sign Up</h1>
-        <p className="text-muted">Create an account below to get started</p>
-        <div className="inputs flex-col gap-2">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="First Name"
-            value={firstName}
-            onChange={handleFirstName}
-            required
-          />
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={handleLastName}
-            required
-          />
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Email"
-            value={email}
-            onChange={handleEmail}
-            required
-          />
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Password"
-            value={password}
-            onChange={handlePassword}
-            required
-          />
-        </div>
-        <div className="flex justify-center mt-2 mb-2">
-          <button type="submit" className="bg-slate-600">
-            Sign Up
-          </button>
-        </div>
-      </form>
-    </div>
+    <>
+      <PageHeader />
+      <div className="flex justify-center text-black bg-slate-400">
+        <form onSubmit={handleSubmit}>
+          <h1>Sign Up</h1>
+          <p className="text-muted">Create an account below to get started</p>
+          <div className="inputs flex-col gap-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="First Name"
+              value={firstName}
+              onChange={handleFirstName}
+              required
+            />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={handleLastName}
+              required
+            />
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmail}
+              required
+            />
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Password"
+              value={password}
+              onChange={handlePassword}
+              required
+            />
+          </div>
+          <div className="flex justify-center mt-2 mb-2">
+            <button type="submit" className="bg-slate-600">
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import setAuthToken from "@/app/utils/setAuthToken";
 import jwtDecode from "jwt-decode";
+import PageHeader from "../../../components/PageHeader";
 
 export default function Login() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Login() {
         password,
       })
       .then((response) => {
+        console.log("R:", response);
         localStorage.setItem("jwtToken", response.data.token);
         localStorage.setItem("email", response.data.userData.email);
         localStorage.setItem("expiration", response.data.userData.exp);
@@ -39,6 +41,7 @@ export default function Login() {
         setRedirect(true);
       })
       .catch((error) => {
+        console.log("E:", error);
         setError(error.response.data.message);
       });
   };
@@ -67,42 +70,45 @@ export default function Login() {
   }
 
   return (
-    <div className="text-black">
-      <form
-        className=" inputs flex-col items-center bg-slate-500"
-        onSubmit={handleSubmit}
-      >
-        <h1>Login</h1>
-        <p className="text-muted">Sign In to your account</p>
-        <div className="inputs flex-col gap-2 items-center">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Email"
-            value={email}
-            onChange={handleEmail}
-            required
-          />
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Password"
-            alue={password}
-            onChange={handlePassword}
-            required
-          />
-        </div>
-        <div className="row">
-          <button type="submit" className="bg-slate-600 px-4">
-            Login
-          </button>
-        </div>
-        <br />
-        <h2>Don't have an account? Sign Up Now!</h2>
-        <a href="/users/signup" type="button" className="bg-slate-600 mt-3">
-          Register Now!
-        </a>
-      </form>
-    </div>
+    <>
+      <PageHeader />
+      <div className="text-black">
+        <form
+          className=" inputs flex-col items-center bg-slate-500"
+          onSubmit={handleSubmit}
+        >
+          <h1>Login</h1>
+          <p className="text-muted">Sign In to your account</p>
+          <div className="inputs flex-col gap-2 items-center">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmail}
+              required
+            />
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Password"
+              alue={password}
+              onChange={handlePassword}
+              required
+            />
+          </div>
+          <div className="row">
+            <button type="submit" className="bg-slate-600 px-4">
+              Login
+            </button>
+          </div>
+          <br />
+          <h2>Don't have an account? Sign Up Now!</h2>
+          <a href="/users/signup" type="button" className="bg-slate-600 mt-3">
+            Register Now!
+          </a>
+        </form>
+      </div>
+    </>
   );
 }
