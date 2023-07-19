@@ -14,7 +14,14 @@ export default function Header() {
       <div className="basis-1/3 flex justify-center">
         <h1>Colorz</h1>
       </div>
-      <div className="basis-1/3"></div>
+      <div className="basis-1/3">
+        <Link
+          href="/users/login"
+          className="border-white border-2 rounded-md ml-10 text-base pl-1 pr-1"
+        >
+          Login
+        </Link>
+      </div>
     </div>
   );
 }
